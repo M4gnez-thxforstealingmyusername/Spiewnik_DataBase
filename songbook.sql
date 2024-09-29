@@ -7,36 +7,34 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE IF NOT EXISTS `songbook` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `songbook`;
 
 CREATE TABLE `chord` (
   `id` int(11) NOT NULL,
   `lyricsId` int(11) NOT NULL,
-  `userId` int(11) DEFAULT NULL,
+  `userId` int(11) NOT NULL,
   `uploadDate` datetime DEFAULT current_timestamp(),
   `editUserId` int(11) DEFAULT NULL,
   `editDate` datetime DEFAULT NULL,
   `chords` varchar(10000) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `verified` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `chordupdaterequest` (
   `id` int(11) NOT NULL,
   `chordId` int(11) NOT NULL,
-  `editUser` int(11) NOT NULL,
+  `editUserId` int(11) NOT NULL,
   `editDate` datetime DEFAULT current_timestamp(),
   `chords` varchar(10000) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `reason` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `adminId` int(11) NOT NULL,
   `accepted` tinyint(1) DEFAULT NULL,
   `rejectionMessage` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `city` (
   `id` int(11) NOT NULL,
   `name` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `customtext` (
   `id` int(11) NOT NULL,
@@ -45,7 +43,7 @@ CREATE TABLE `customtext` (
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `text` varchar(1000) DEFAULT NULL,
   `remain` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `favoritesongs` (
   `id` int(11) NOT NULL,
@@ -57,8 +55,8 @@ CREATE TABLE `feedback` (
   `id` int(11) NOT NULL,
   `userId` int(11) DEFAULT NULL,
   `upladDate` datetime DEFAULT current_timestamp(),
-  `type` enum('bug','suggestion','other') COLLATE utf8_unicode_ci DEFAULT NULL,
-  `message` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL
+  `type` enum('bug','suggestion','other') DEFAULT NULL,
+  `message` varchar(1000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `lyrics` (
@@ -71,12 +69,12 @@ CREATE TABLE `lyrics` (
   `alternativeTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `text` varchar(10000) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `verified` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `lyricsupdaterequest` (
   `id` int(11) NOT NULL,
   `lyricsId` int(11) NOT NULL,
-  `editUser` int(11) DEFAULT NULL,
+  `editUser` int(11) NOT NULL,
   `editDate` datetime DEFAULT current_timestamp(),
   `alternativeTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `text` varchar(10000) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -84,29 +82,26 @@ CREATE TABLE `lyricsupdaterequest` (
   `adminId` int(11) NOT NULL,
   `accepted` tinyint(1) DEFAULT NULL,
   `rejectionMessage` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `presentation` (
   `id` int(11) NOT NULL,
-  `userId` int(11) DEFAULT NULL,
+  `userId` int(11) NOT NULL,
   `uploadDate` datetime DEFAULT current_timestamp(),
   `occasion` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `code` varchar(800) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `remembertoken` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `token` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL
+  `token` varchar(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `settings` (
-  `Id` int(11) NOT NULL,
-  `fontSize` int(11) DEFAULT NULL,
-  `colorTheme` enum('defaultDark','defaultLight','altDark','altLight','custom') COLLATE utf8_unicode_ci DEFAULT 'defaultDark',
-  `customColor` varchar(7) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `nextSlide` varchar(5) COLLATE utf8_unicode_ci DEFAULT 'left',
-  `reset` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'r'
+  `userId` int(11) NOT NULL,
+  `nextSlide` varchar(5) DEFAULT 'left',
+  `reset` varchar(20) DEFAULT 'r'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `song` (
@@ -114,13 +109,13 @@ CREATE TABLE `song` (
   `userId` int(11) NOT NULL,
   `uploadDate` datetime DEFAULT current_timestamp(),
   `editUserId` int(11) DEFAULT NULL,
-  `editDate` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `editDate` datetime DEFAULT NULL,
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `shortTitle` varchar(16) DEFAULT NULL,
+  `shortTitle` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `tagList` varchar(300) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `defaultLyricsId` int(11) DEFAULT NULL,
   `verified` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `songupdaterequest` (
   `id` int(11) NOT NULL,
@@ -136,7 +131,7 @@ CREATE TABLE `songupdaterequest` (
   `adminId` int(11) NOT NULL,
   `accepted` tinyint(1) DEFAULT NULL,
   `rejectionMessage` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
@@ -145,20 +140,11 @@ CREATE TABLE `user` (
   `username` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `displayName` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(60) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `authorizationLevel` int(11) DEFAULT 0,
-  `verified` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `authorizationLevel` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 DELIMITER $$
 CREATE TRIGGER `generateSettings` AFTER INSERT ON `user` FOR EACH ROW BEGIN
-    INSERT INTO settings VALUES(NEW.id, NULL, default, default, DEFAULT);
-END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `verifyAccount` BEFORE UPDATE ON `user` FOR EACH ROW BEGIN
-    IF NEW.verified = TRUE THEN
-        SET NEW.authorizationLevel = 1;
-    END IF;
+    INSERT INTO settings VALUES(NEW.id, DEFAULT, DEFAULT);
 END
 $$
 DELIMITER ;
@@ -195,7 +181,7 @@ ALTER TABLE `remembertoken`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `settings`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`userId`);
 
 ALTER TABLE `song`
   ADD PRIMARY KEY (`id`);
